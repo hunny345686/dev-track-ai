@@ -1,26 +1,19 @@
 "use client";
-import { useTopicStore } from "@/store/useTopicStore";
-import { useEffect } from "react";
-import { getTopics } from "./libs/api";
-import TopicCard from "@/components/TopicCard";
-import TopicFrom from "@/components/TopicForm";
+import Category from "@/components/category";
+import ExplainArea from "@/components/explainArea";
 
-export default function Home() {
 
-const {topics, setTopic} =useTopicStore()
-
-useEffect(()=>{
-getTopics().then(setTopic)
-},[setTopic])
+export default function TopicsLayout() {
+  
   return (
-   <div className="p-6">
-    <TopicFrom/>
-    <h1 className="text-2xl font-bold mb-4">📚 Topics</h1>
-    <div className="grid gap-4">
-      {topics.map((topic)=>(
-        <TopicCard key={topic._id} topic={topic}/>
-      ))}
+    <div className="flex flex-col lg:flex-row h-screen gap-6 p-6 bg-zinc-50 dark:bg-zinc-950">
+  
+      {/* LEFT SECTION: Categories & Accordions */}
+      <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar">
+       <Category/>
+      </div>
+      {/* RIGHT SECTION: AI Explanation View */}
+      <ExplainArea selectedTopic={null}/>
     </div>
-   </div>
   );
 }
