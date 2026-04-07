@@ -6,6 +6,7 @@ export const getTopics = async () => {
 
 // Create Tocpis
 export const createTopic = async (data: any) => {
+  // console.log("data => ", data);
   const result = await fetch("/api/topics", {
     method: "POST",
     body: JSON.stringify(data),

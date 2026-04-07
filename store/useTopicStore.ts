@@ -12,14 +12,14 @@ interface Topic {
 interface TopicStore {
   topics: Topic[];
   setTopic: (topics: Topic[]) => void;
-  addTopic: (topic: Topic[]) => 
+  addTopic: (topic: Topic) => void;
 }
 
 export const useTopicStore = create<TopicStore>((set) => ({
   topics: [],
   setTopic: (topics) => set({ topics }),
   addTopic: (topic) =>
-    set((state) => {
-      topics: [...state.topics, topic];
-    }),
+    set((state) => ({
+      topics: [...state.topics, topic],
+    })),
 }));
