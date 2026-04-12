@@ -139,7 +139,7 @@ export default function CategoryAccordion() {
 
             <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 border-t border-blue-100 dark:border-blue-900/30">
                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 text-center">
-                 AI will analyze the documentation and generate 5-10 advanced topics for your selection.
+                 AI will analyze the documentation and generate advanced topics for your selection.
                </p>
             </div>
           </div>
