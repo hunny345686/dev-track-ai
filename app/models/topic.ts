@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+
 const { Schema } = mongoose;
+
 const TopicSchema = new Schema(
   {
     title: String,
@@ -11,6 +13,14 @@ const TopicSchema = new Schema(
       default: "not_started",
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
-export const TopicModel = mongoose.model("Topic", TopicSchema);
+
+TopicSchema.index(
+  { title: 1, category: 1 },
+  { unique: true }
+);
+
+export const TopicModel =
+  mongoose.models.Topic ||
+  mongoose.model("Topic", TopicSchema);

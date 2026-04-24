@@ -1,10 +1,15 @@
-// import { connectToMongoDB } from "@/app/libs/mongodb";
+import { connectToMongoDB } from "@/app/libs/mongodb";
+import { TopicModel } from "@/app/models/topic";
 import { Agent, run, tool } from "@openai/agents";
 import { z } from "zod";
 
 export async function POST(req: Request) {
   const { topic } = await req.json();
 
+  if (!topic || topic.length > 50) {
+    return Response.json({ error: "Invalid topic" }, { status: 400 });
+  }
+  await connectToMongoDB();
   const createTopic = tool({
     name: "create_topics",
     description:
@@ -12,14 +17,19 @@ export async function POST(req: Request) {
     parameters: z.object({
       topics: z.array(
         z.object({
-          title: z.string(),
-          category: z.string(),
-          description: z.string(),
+          title: z.string().min(2),
+          category: z.string().min(2),
+          description: z.string().min(5)
         }),
       ),
     }),
     async execute(input) {
-      console.log("tool Colling", input);
+      await TopicModel.insertMany(input.topics, {
+        ordered: false
+      });
+      return {
+        msg: "Topic are Created"
+      }
     },
   });
 
@@ -49,13 +59,24 @@ export async function POST(req: Request) {
     
     Do NOT return anything except a valid JSON array.
     No explanations, no extra text.
+    Return data using tool create_topics
+    with this structure:
+    {
+      "topics": [ {
+    title: 'title',
+    category: 'category',
+    description: 'small Descriptin'
+  }]
+    }
     `,
     tools: [createTopic],
   });
 
   const result = await run(topicGenrator, topic);
 
-  console.log("Result output", result.finalOutput);
+  return Response.json({
+    success: true,
+    message: "Topics generated"
+  });
 
-  //   await connectToMongoDB();
 }

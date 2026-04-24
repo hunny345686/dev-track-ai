@@ -4,6 +4,8 @@ export const getTopics = async () => {
   return result.json();
 };
 
+
+
 // Create Tocpis
 export const createTopic = async (data: any) => {
   // console.log("data => ", data);
