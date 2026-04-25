@@ -1,25 +1,9 @@
 import { create } from "zustand";
 
-interface Topic {
-  _id?: string;
-  title: string;
-  description: string;
-  category: string;
-  status: string;
-  confidence: number;
-}
 
-interface TopicStore {
-  topics: Topic[];
-  setTopic: (topics: Topic[]) => void;
-  addTopic: (topic: Topic) => void;
-}
 
-export const useTopicStore = create<TopicStore>((set) => ({
-  topics: [],
-  setTopic: (topics) => set({ topics }),
-  addTopic: (topic) =>
-    set((state) => ({
-      topics: [...state.topics, topic],
-    })),
+export const useTopicStore = create((set) => ({
+  aiExplanation: "",
+  setAiExplanation: (text) => set({ aiExplanation: text }),
+  cearAiExplanation: () => set({ aiExplanation: "" }),
 }));

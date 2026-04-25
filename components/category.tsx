@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ChevronRight, Code2, Sparkles, BookOpen, X } from "lucide-react";
+import { useTopicStore } from "@/store/useTopicStore";
 
 
 export default function CategoryAccordion() {
@@ -12,6 +13,8 @@ export default function CategoryAccordion() {
   const [loading, setLoading] = useState(false);
 
   const [topicData, setTopicData] = useState([])
+
+  const { setAiExplanation } = useTopicStore();
 
 
   /**
@@ -63,10 +66,23 @@ export default function CategoryAccordion() {
     setIsModalOpen(false);
   };
 
-  const handleTopicClick = (topic) => {
+  const handleTopicClick = async (topic) => {
     setSelectedTopicId(topic._id)
-    console.log(topic.title)
-    console.log(topic.description)
+
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "topic": topic.title,
+        "description": topic.description
+      })
+    })
+    const data = await res.json()
+    setAiExplanation(data)
+
+
   }
 
 
