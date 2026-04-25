@@ -1,18 +1,7 @@
 "use client";
-import { useState } from "react";
-import { ChevronRight, Code2, Sparkles, BookOpen, X, Wand2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronRight, Code2, Sparkles, BookOpen, X } from "lucide-react";
 
-// Existing Static Data
-const CATEGORIES = ["React", "Next.js", "DSA", "System Design", "Node.js", "JavaScript"];
-
-const TOPICS_DATA = [
-  {
-    _id: "1",
-    title: "React Server Components",
-    category: "React",
-    description: "Learn about the new paradigm in React 18/19."
-  }
-];
 
 export default function CategoryAccordion() {
   const [openCategory, setOpenCategory] = useState<string | null>("React");
@@ -21,6 +10,23 @@ export default function CategoryAccordion() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [aiInput, setAiInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [topicData, setTopicData] = useState([])
+
+
+  /**
+   *@name Get All Topic and Subtopic 
+   */
+
+  useEffect(() => {
+    const getTopicsData = async () => {
+      const res = await fetch("/api/topics")
+      const data = await res.json()
+      setTopicData(data)
+
+    }
+    getTopicsData()
+  }, [])
 
 
   const getTopics = async (topic: string) => {
@@ -57,6 +63,17 @@ export default function CategoryAccordion() {
     setIsModalOpen(false);
   };
 
+  const handleTopicClick = (topic) => {
+    setSelectedTopicId(topic._id)
+    console.log(topic.title)
+    console.log(topic.description)
+  }
+
+
+  const allCate = topicData.map((item: any) => item.category)
+  const CATEGORIES = [... new Set(allCate)]
+
+
   if (loading) return <p>Loding...</p>
 
   return (
@@ -82,7 +99,7 @@ export default function CategoryAccordion() {
       <div className="space-y-3">
         {CATEGORIES.map((cat) => {
           const isOpen = openCategory === cat;
-          const filteredTopics = TOPICS_DATA.filter(
+          const filteredTopics = topicData.filter(
             (topic) => topic.category === cat
           );
 
@@ -109,7 +126,7 @@ export default function CategoryAccordion() {
                   {filteredTopics.map((topic) => (
                     <div
                       key={topic._id}
-                      onClick={() => setSelectedTopicId(topic._id)}
+                      onClick={() => handleTopicClick(topic)}
                       className={`p-3 border rounded cursor-pointer ${selectedTopicId === topic._id
                         ? "border-blue-500"
                         : ""
